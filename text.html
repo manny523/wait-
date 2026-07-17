@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Surprise</title>
+    <!-- Importing elegant fonts for a romantic feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            /* Deep romantic night gradient */
+            background: radial-gradient(circle at center, #590a18 0%, #1a0005 100%);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px 50px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            max-width: 90%;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: #ffb3c6;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 179, 198, 0.5);
+        }
+
+        p.subtitle {
+            font-size: 1rem;
+            color: #ffccd5;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+
+        .countdown {
+            font-size: 3.5rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #ff0844 0%, #ffb199 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 8, 68, 0.4);
+            animation: heartbeat 2s infinite;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 8, 68, 0.6);
+        }
+
+        /* Pulsing heartbeat animation for the button */
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            10% { transform: scale(1.05); }
+            20% { transform: scale(1); }
+            30% { transform: scale(1.05); }
+            40% { transform: scale(1); }
+            100% { transform: scale(1); }
+        }
+
+        .message-box {
+            margin-top: 25px;
+            font-size: 1.1rem;
+            color: #ffe6ea;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            min-height: 30px;
+        }
+
+        .message-box.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Just a little longer...</h1>
+        <p class="subtitle">Something special awaits you tonight.</p>
+        
+        <div class="countdown" id="timer">00:00:00</div>
+        
+        <button class="btn" id="giftBtn">Open Gift 🎁</button>
+        
+        <div class="message-box" id="msgText"></div>
+    </div>
+
+    <script>
+        const timerElement = document.getElementById('timer');
+        const giftBtn = document.getElementById('giftBtn');
+        const msgText = document.getElementById('msgText');
+
+        // Target: Today at 10:00 PM (22:00:00)
+        function getTargetTime() {
+            let target = new Date();
+            target.setHours(22, 0, 0, 0); // 22 is 10 PM in 24-hour format
+            
+            // If it's already past 10 PM today, set the target for 10 PM tomorrow
+            if (new Date() > target) {
+                target.setDate(target.getDate() + 1);
+            }
+            return target;
+        }
+
+        const targetTime = getTargetTime();
+
+        function updateCountdown() {
+            const now = new Date();
+            const timeDiff = targetTime - now;
+
+            // If countdown is finished
+            if (timeDiff <= 0) {
+                timerElement.innerHTML = "00:00:00";
+                return;
+            }
+
+            // Calculate hours, minutes, seconds
+            const h = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+            // Format with leading zeros (e.g., 09:05:02)
+            timerElement.innerHTML = 
+                `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+
+        // Update the timer every second
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Button click logic
+        giftBtn.addEventListener('click', () => {
+            const now = new Date();
+            
+            if (now < targetTime) {
+                // If clicked before 10 PM
+                msgText.innerHTML = "Wait for a while... The perfect moment hasn't arrived yet! ❤️";
+                msgText.classList.add('show');
+                
+                // Hide message after 4 seconds
+                setTimeout(() => {
+                    msgText.classList.remove('show');
+                }, 4000);
+            } else {
+                // If clicked exactly at or after 10 PM
+                msgText.innerHTML = "It's time! Here is your surprise... ✨";
+                msgText.classList.add('show');
+                
+                // You can add logic here to redirect to another page or reveal an image
+                // window.location.href = "surprise.html";
+            }
+        });
+    </script>
+</body>
+</html>
